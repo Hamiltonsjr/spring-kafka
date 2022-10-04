@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 @Slf4j
 @Service
-public class LogConsumer {
+public class ConsumerLog {
 
     public void logConsumer() {
         var consumer = new KafkaConsumer<String, String>(properties());
@@ -36,7 +36,8 @@ public class LogConsumer {
         properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, LogConsumer.class.getSimpleName());
+        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, ConsumerLog.class.getSimpleName());
+        properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "1");
         return properties;
     }
 

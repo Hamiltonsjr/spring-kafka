@@ -42,6 +42,8 @@ public class ConsumerMessage {
         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         // criação de grupos para ouvir os topicos
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, ConsumerMessage.class.getSimpleName());
+        // rebalanceamento de consumo da mensagem fazendo o poll de 1 em 1
+        properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "1");
         return properties;
     }
 

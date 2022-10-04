@@ -2,7 +2,7 @@ package br.com.kafka.ecommerce.kafka.resource;
 
 import br.com.kafka.ecommerce.kafka.consumer.ConsumerEmail;
 import br.com.kafka.ecommerce.kafka.consumer.ConsumerMessage;
-import br.com.kafka.ecommerce.kafka.consumer.LogConsumer;
+import br.com.kafka.ecommerce.kafka.consumer.ConsumerLog;
 import br.com.kafka.ecommerce.kafka.producer.ProducerMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class Controller {
     private ConsumerEmail email;
 
     @Autowired
-    private LogConsumer logConsumer;
+    private ConsumerLog logConsumer;
 
     @GetMapping("envia")
     public ResponseEntity<String> send() throws ExecutionException, InterruptedException {

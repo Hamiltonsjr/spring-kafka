@@ -10,6 +10,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.stereotype.Service;
 
 import java.util.Properties;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 @Slf4j
@@ -18,8 +19,9 @@ public class ProducerMessage {
 
     public void sendMessage() throws ExecutionException, InterruptedException {
         try (var producer = new KafkaProducer<String, String>(properties())) {
+            final String key = UUID.randomUUID().toString();
             var value = "123,456,789";
-            var record = new ProducerRecord<>(Topics.ECOMMERCE_ORDER, value, value);
+            var record = new ProducerRecord<>(Topics.ECOMMERCE_ORDER, key, value);
             Callback callback = (data, ex) -> {
                 if (ex != null) {
                     ex.printStackTrace();
@@ -27,7 +29,7 @@ public class ProducerMessage {
                 log.info("Success data={} ::partition={} ::offset={}", data.topic(), data.partition(), data.offset());
             };
             var email = "Welcome";
-            var emailRecord = new ProducerRecord<>(Topics.EMAIL, email, email);
+            var emailRecord = new ProducerRecord<>(Topics.EMAIL, key, email);
             producer.send(record, callback).get();
             producer.send(emailRecord, callback).get();
         }
