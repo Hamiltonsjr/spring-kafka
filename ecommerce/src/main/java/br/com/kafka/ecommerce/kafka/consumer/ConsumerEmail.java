@@ -13,14 +13,12 @@ import java.util.Properties;
 
 @Slf4j
 @Service
-public class ConsumerMessage {
+public class ConsumerEmail {
 
-    public void consumerMessage() {
-        var consumer = new KafkaConsumer<String, String>(properties());
-        // escutando o topico do envio da mensagem
-        consumer.subscribe(Collections.singletonList(Topics.ECOMMERCE_ORDER));
+    public void consumerEmail() {
+        var consumer = new KafkaConsumer<String, String>(propertiesEmail());
+        consumer.subscribe(Collections.singletonList(Topics.EMAIL));
         while (true) {
-            // checar se contem mensagem por um tempo estimado
             var records = consumer.poll(Duration.ofMillis(100));
             if (!records.isEmpty()) {
                 log.info("message is empty");
@@ -34,15 +32,12 @@ public class ConsumerMessage {
         }
     }
 
-    private static Properties properties() {
+    private static Properties propertiesEmail() {
         var properties = new Properties();
         properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        // deserializadores das chaves
         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        // criação de grupos para ouvir os topicos
-        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, ConsumerMessage.class.getSimpleName());
+        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, ConsumerEmail.class.getSimpleName());
         return properties;
     }
-
 }
