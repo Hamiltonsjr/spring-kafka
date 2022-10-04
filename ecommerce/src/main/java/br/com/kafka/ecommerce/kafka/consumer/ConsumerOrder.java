@@ -12,7 +12,7 @@ import java.util.Properties;
 
 @Slf4j
 @Service
-public class ConsumerMessage {
+public class ConsumerOrder {
 
     public void consumerMessage() {
 //        var consumer = new KafkaConsumer<String, String>(properties());
@@ -31,8 +31,8 @@ public class ConsumerMessage {
 //                }
 //            }
 //        }
-        var consumer = new ConsumerMessage();
-        var service = new KafkaService(ConsumerMessage.class.getSimpleName(), Topics.ECOMMERCE_ORDER, consumer::parse);
+        var consumer = new ConsumerOrder();
+        var service = new KafkaService(ConsumerOrder.class.getSimpleName(), Topics.ECOMMERCE_ORDER, consumer::parse);
         service.run();
     }
 
@@ -51,7 +51,7 @@ public class ConsumerMessage {
         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         // criação de grupos para ouvir os topicos
-        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, ConsumerMessage.class.getSimpleName());
+        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, ConsumerOrder.class.getSimpleName());
         // rebalanceamento de consumo da mensagem fazendo o poll de 1 em 1
         properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "1");
         return properties;

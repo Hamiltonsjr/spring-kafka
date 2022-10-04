@@ -32,6 +32,8 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.amqp:spring-rabbit-test'
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
+	implementation group: 'com.google.code.gson', name: 'gson', version: '2.7'
+
 }
 
 dependencyManagement {

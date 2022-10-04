@@ -2,11 +2,14 @@ package br.com.kafka.ecommerce.kafka.producer;
 
 import br.com.kafka.ecommerce.kafka.KafkaDispatcher;
 import br.com.kafka.ecommerce.kafka.Topics;
+import br.com.kafka.ecommerce.kafka.domain.Order;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.stereotype.Service;
+import org.springframework.util.NumberUtils;
 
+import java.math.BigDecimal;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -16,14 +19,12 @@ import java.util.concurrent.ExecutionException;
 public class ProducerMessage {
 
     public void sendMessage() throws ExecutionException, InterruptedException {
-        var dispatcher = new KafkaDispatcher();
-
-        final String key = UUID.randomUUID().toString();
-        var value = "123,456,789";
+        var orderDispatcher = new KafkaDispatcher<Order>();
+        var emailDispatcher = new KafkaDispatcher<String>();
 
         var email = "Welcome";
-        dispatcher.send(Topics.ECOMMERCE_ORDER, key, value);
-        dispatcher.send(Topics.EMAIL,key,email);
+        orderDispatcher.send(Topics.ECOMMERCE_ORDER, this.createOrder().getUserId(), this.createOrder());
+        emailDispatcher.send(Topics.EMAIL, UUID.randomUUID().toString(), email);
     }
 
     private static Properties properties() {
@@ -33,6 +34,14 @@ public class ProducerMessage {
         properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         return properties;
+    }
+
+    private Order createOrder() {
+        return Order.builder()
+                .userId(UUID.randomUUID().toString())
+                .orderId(UUID.randomUUID().toString())
+                .amount(BigDecimal.valueOf(100))
+                .build();
     }
 
 }
