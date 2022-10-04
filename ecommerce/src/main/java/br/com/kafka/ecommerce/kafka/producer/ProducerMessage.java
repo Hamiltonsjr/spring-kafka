@@ -1,11 +1,9 @@
 package br.com.kafka.ecommerce.kafka.producer;
 
+import br.com.kafka.ecommerce.kafka.KafkaDispatcher;
 import br.com.kafka.ecommerce.kafka.Topics;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.producer.Callback;
-import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.stereotype.Service;
 
@@ -18,21 +16,14 @@ import java.util.concurrent.ExecutionException;
 public class ProducerMessage {
 
     public void sendMessage() throws ExecutionException, InterruptedException {
-        try (var producer = new KafkaProducer<String, String>(properties())) {
-            final String key = UUID.randomUUID().toString();
-            var value = "123,456,789";
-            var record = new ProducerRecord<>(Topics.ECOMMERCE_ORDER, key, value);
-            Callback callback = (data, ex) -> {
-                if (ex != null) {
-                    ex.printStackTrace();
-                }
-                log.info("Success data={} ::partition={} ::offset={}", data.topic(), data.partition(), data.offset());
-            };
-            var email = "Welcome";
-            var emailRecord = new ProducerRecord<>(Topics.EMAIL, key, email);
-            producer.send(record, callback).get();
-            producer.send(emailRecord, callback).get();
-        }
+        var dispatcher = new KafkaDispatcher();
+
+        final String key = UUID.randomUUID().toString();
+        var value = "123,456,789";
+
+        var email = "Welcome";
+        dispatcher.send(Topics.ECOMMERCE_ORDER, key, value);
+        dispatcher.send(Topics.EMAIL,key,email);
     }
 
     private static Properties properties() {

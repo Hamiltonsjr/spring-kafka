@@ -1,34 +1,44 @@
 package br.com.kafka.ecommerce.kafka.consumer;
 
+import br.com.kafka.ecommerce.kafka.Topics;
+import br.com.kafka.ecommerce.kafka.service.KafkaService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.util.Properties;
-import java.util.regex.Pattern;
 
 @Slf4j
 @Service
 public class ConsumerLog {
 
     public void logConsumer() {
-        var consumer = new KafkaConsumer<String, String>(properties());
-        // consumindo varios topicos
-        consumer.subscribe(Pattern.compile("fct.*"));
-        while (true) {
-            var records = consumer.poll(Duration.ofMillis(100));
-            if (!records.isEmpty()) {
-                log.info("message is empty");
-                for (var record : records) {
-                    log.info("LOG={}", record.topic());
-                    log.info("Key={}", record.key());
-                    log.info("Value={}", record.value());
-                }
-            }
-        }
+//        var consumer = new KafkaConsumer<String, String>(properties());
+//        // consumindo varios topicos
+//        consumer.subscribe(Pattern.compile("fct.*"));
+//        while (true) {
+//            var records = consumer.poll(Duration.ofMillis(100));
+//            if (!records.isEmpty()) {
+//                log.info("message is empty");
+//                for (var record : records) {
+//                    log.info("LOG={}", record.topic());
+//                    log.info("Key={}", record.key());
+//                    log.info("Value={}", record.value());
+//                }
+//            }
+//        }
+        var consumer = new ConsumerLog();
+        var service = new KafkaService(ConsumerLog.class.getSimpleName(), Topics.ECOMMERCE_ORDER, consumer::parse);
+        service.run();
+    }
+
+    private void parse(final ConsumerRecord<String, String> record) {
+        log.info("LOG={}", record.topic());
+        log.info("Key={}", record.key());
+        log.info("Value={}", record.value());
+
     }
 
     private static Properties properties() {
