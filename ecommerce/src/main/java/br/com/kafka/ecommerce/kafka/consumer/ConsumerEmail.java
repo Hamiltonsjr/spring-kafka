@@ -8,6 +8,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Properties;
 
 @Slf4j
@@ -16,7 +17,8 @@ public class ConsumerEmail {
 
     public void consumerEmail() {
         var consumerEmail = new ConsumerEmail();
-        var service = new KafkaService(ConsumerEmail.class.getSimpleName(), Topics.EMAIL, consumerEmail::parse);
+        var service = new KafkaService(ConsumerEmail.class.getSimpleName(),
+                Topics.EMAIL, consumerEmail::parse, String.class, new HashMap<>());
         service.run();
     }
 

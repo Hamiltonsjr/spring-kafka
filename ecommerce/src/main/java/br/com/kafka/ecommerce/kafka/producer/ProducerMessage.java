@@ -2,6 +2,7 @@ package br.com.kafka.ecommerce.kafka.producer;
 
 import br.com.kafka.ecommerce.kafka.KafkaDispatcher;
 import br.com.kafka.ecommerce.kafka.Topics;
+import br.com.kafka.ecommerce.kafka.domain.Email;
 import br.com.kafka.ecommerce.kafka.domain.Order;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -19,11 +20,10 @@ public class ProducerMessage {
 
     public void sendMessage() throws ExecutionException, InterruptedException {
         var orderDispatcher = new KafkaDispatcher<Order>();
-        var emailDispatcher = new KafkaDispatcher<String>();
+        var emailDispatcher = new KafkaDispatcher<Email>();
 
-        var email = "Welcome";
         orderDispatcher.send(Topics.ECOMMERCE_ORDER, this.createOrder().getUserId(), this.createOrder());
-        emailDispatcher.send(Topics.EMAIL, UUID.randomUUID().toString(), email);
+        emailDispatcher.send(Topics.EMAIL, UUID.randomUUID().toString(), this.createEmail());
     }
 
     private static Properties properties() {
@@ -40,6 +40,13 @@ public class ProducerMessage {
                 .userId(UUID.randomUUID().toString())
                 .orderId(UUID.randomUUID().toString())
                 .amount(BigDecimal.valueOf(100))
+                .build();
+    }
+
+    private Email createEmail() {
+        return Email.builder()
+                .subject("Test@test.com")
+                .body("Hello World")
                 .build();
     }
 
