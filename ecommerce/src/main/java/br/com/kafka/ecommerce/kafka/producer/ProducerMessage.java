@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.stereotype.Service;
-import org.springframework.util.NumberUtils;
 
 import java.math.BigDecimal;
 import java.util.Properties;

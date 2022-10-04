@@ -44,7 +44,7 @@ public class ConsumerOrder {
     }
 
 
-        private static Properties properties() {
+    private static Properties properties() {
         var properties = new Properties();
         properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         // deserializadores das chaves
